@@ -48,7 +48,6 @@ const conversions = [
   { pattern: /^\s*$/gm, replacement: "<br>" },
   { pattern: /\*\*(.*?)\*\*/g, replacement: "<b>$1</b>" },
   { pattern: /\_(.*?)\_/g, replacement: "<em>$1</em>" },
-  { pattern: /\`(.*?)\`/g, replacement: "<tt>$1</tt>" },
   { pattern: /```([\s\S]+?)```/g, replacement: "<pre>$1</pre>" }, // Code blocks
 ];
 
