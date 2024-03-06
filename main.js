@@ -45,18 +45,71 @@ async function checkMdPath(path) {
 
 // Regular expression patterns and their replacements
 const conversions = [
-  { pattern: /^\s*$/gm, replacement: "<br>" },
-  { pattern: /\*\*(.*?)\*\*/g, replacement: "<b>$1</b>" },
-  { pattern: /\_(.*?)\_/g, replacement: "<em>$1</em>" },
-  { pattern: /\`(.*?)\`/g, replacement: "<tt>$1</tt>" },
-  { pattern: /```([\s\S]+?)```/g, replacement: "<pre>$1</pre>" }, // Code blocks
+  { pattern: /\`\`\`([\s\S]+?)\`\`\`/g, replacement: "<pre>$1</pre>" },
+  { pattern: /^\s*$/gm, replacement: "<p></p>" },
+  {
+    pattern: /\*\*([^ ].*[^ ])\*\*/g,
+    replacement: "<b>$1</b>",
+  },
+  {
+    pattern: /\*\*([^ ])\*\*/g,
+    replacement: "<b>$1</b>",
+  },
+
+  { pattern: /\_([^ ].*[^ ])\_/g, replacement: " <em>$1</em> " },
+  { pattern: /\`([^ ].*[^ ])\`/g, replacement: " <tt>$1</tt> " },
+];
+
+const wrongPatterns = [
+  {
+    pattern: /\*\*[*]{2,}.*[*]{2,}\*\*/g,
+  },
+  {
+    pattern: /\*\*[`].*[`]\*\*/g,
+  },
+  {
+    pattern: /\*\*[_].*[_]\*\*/g,
+  },
+  {
+    pattern: /\`\_/g,
+  },
 ];
 
 // Function to convert Markdown to HTML
 function markdownToHTML(markdown) {
-  conversions.forEach(({ pattern, replacement }) => {
-    markdown = markdown.replace(pattern, replacement);
+  const mistakes = wrongPatterns.filter(({ pattern }) =>
+    pattern.test(markdown)
+  );
+  if (mistakes.length > 0) {
+    console.log("Wrong file");
+    return;
+  }
+  const regex = /\`\`\`([\s\S]+?)\`\`\`/g;
+  const matches = [...markdown.matchAll(regex)];
+  for (let match of matches) {
+    match[0] = match[0].replace(/\`\`\`([\s\S]+?)\`\`\`/g, "<pre>$1</pre>");
+  }
+  const paragraphs = markdown.split(/([a-zA-Z0-9]*)^\s*$/gm);
+  for (let i = 0; i < paragraphs.length; i++) {
+    let element = paragraphs[i];
+    if (!element) {
+      paragraphs.splice(i, 1);
+      i--;
+    }
+  }
+  let htmlParagraphs = paragraphs.map((paragraph) => {
+    return `<p>${paragraph.trim()}</p>`;
   });
+  htmlParagraphs = htmlParagraphs.join("\n");
+  conversions.forEach(({ pattern, replacement }) => {
+    htmlParagraphs = htmlParagraphs.replace(pattern, replacement);
+  });
+
+  const replacedText = htmlParagraphs.replace(/<pre>[\s\S]*?<\/pre>/g, () => {
+    const element = matches.shift();
+    return element[0];
+  });
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -65,7 +118,7 @@ function markdownToHTML(markdown) {
     <title>Document</title>
 </head>
 <body>
-    ${markdown}
+    ${replacedText}
 </body>
 </html>`;
 }

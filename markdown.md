@@ -2,17 +2,29 @@ Markdown Example
 
 This is an example Markdown file with various formatting options:
 
-**Bold text**
+abgoi**Bold text**
 
-_Italic text_
+**Some other bold text**
+snake_case
+
+Italic text **a**
 
 `Monospaced text`
 
-````Preformatted a
-   ** d text```
+text1
 
+```
+This text is **preformated**
 
-````
+And can have multiple paragraphs
+```
+
+```
+
+This text is second and also `preformated`
+
+And can have multiple paragraphs
+```
 
 Paragraph1. aighaoig
 
