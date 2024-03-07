@@ -2,12 +2,16 @@ Markdown Example
 
 This is an example Markdown file with various formatting options:
 
-abgoi**Bold text**
+**Bold text**
 
-**Some other bold text**
+`someText`
+
+ **Some other bold text**
+
 snake_case
 
-Italic text **a**
+
+  _Italic text_
 
 `Monospaced text`
 
