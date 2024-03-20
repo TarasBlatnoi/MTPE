@@ -1,11 +1,9 @@
 const fs = require("fs").promises;
-const { commandValidation } = require('./commandValidation')
-const { checkMdPath } =  require('./cheskMdPath')
-const {markdownToHTML} = require('./markdownToHtml');
+const { commandValidation } = require("./commandValidation");
+const { checkMdPath } = require("./checkMdPath");
+const { markdownToHTML } = require("./markdownToHtml");
 const args = process.argv.slice(2);
-
-const commandArgs = commandValidation(args)
-
+const commandArgs = commandValidation(args);
 async function main(path) {
   const mdRightPath = await checkMdPath(path);
   let data;
@@ -26,4 +24,4 @@ async function main(path) {
   }
 }
 
-main(commandArgs.path);
+if (commandArgs.path) main(commandArgs.path);

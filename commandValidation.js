@@ -1,19 +1,22 @@
-
-function commandValidation (args){
-    const path = args[0];
-    let outputFlag = false;
-    let outputFile = null;
-    if (args[1] === "--out" && args[2]) {
-      if (args[2].endsWith(".html")) {
-        outputFlag = true;
-        outputFile = args[2];
-      } else {
-        console.log("No output flag or bad filename");
-      }
+function commandValidation(args) {
+  const path = args[0];
+  if (!path) {
+    console.log("Provide a md file");
+    return;
+  }
+  let outputFlag = false;
+  let outputFile = null;
+  if (args[1] === "--out" && args[2]) {
+    if (args[2].endsWith(".html")) {
+      outputFlag = true;
+      outputFile = args[2];
     } else {
-      console.log("No output flag or no file after it");
+      console.log("No output flag or bad filename");
     }
-    return {path,  outputFile}
+  } else {
+    console.log("No output flag or no file after it");
+  }
+  return { path, outputFile };
 }
 
-module.exports = {commandValidation}
+module.exports = { commandValidation };
